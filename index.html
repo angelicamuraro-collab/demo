@@ -299,6 +299,8 @@ em.g{font-style:normal;background:linear-gradient(var(--green),var(--green)) no-
 .incl li::before{content:"\2713";flex:none;width:20px;height:20px;border-radius:50%;background:rgba(20,20,21,.1);color:#fff;display:grid;place-items:center;font-size:10.5px;font-weight:700;transition:background .4s}
 .incl li.in{opacity:1}
 .incl li.in::before{background:var(--ok);animation:pop .4s var(--spring)}
+.incl li.next::before{content:"\2192"}
+.incl li.next.in::before{background:var(--dark)}
 /* what to keep: the designer's good decisions, as compact chips */
 .pane.kp{display:grid;grid-template-columns:1fr 1fr;gap:5px}
 .pane.kp[hidden]{display:none}
@@ -672,8 +674,9 @@ em.g{font-style:normal;background:linear-gradient(var(--green),var(--green)) no-
       <div class="qh"><span class="qk">Technical analysis</span><span class="qst" id="qst"><span class="spin"></span>Analysing</span></div>
       <h3>Your tech pack, assessed.</h3>
       <ul class="incl" id="incl">
-        <li><span><b>Fabric options, researched for you.</b></span></li>
         <li><span><b>Technical assessment, done.</b></span></li>
+        <li><span><b>Fabric options, researched for you.</b></span></li>
+        <li class="next"><span><b>Next: your manufacturer and your quote.</b></span></li>
       </ul>
     </div>
     <div class="acts">
@@ -992,10 +995,10 @@ em.g{font-style:normal;background:linear-gradient(var(--green),var(--green)) no-
 
     // Two ways forward. Accepting the quote leads straight to the manufacturer match;
     // the free 3D preview + feasibility report means a designer who stops here still leaves with something useful.
-    const g2 = $('go2'); g2.disabled = false; g2.classList.add('pulse'); g2.querySelector('.tx').innerHTML = 'Accept quote<small>Get your match</small>';
+    const g2 = $('go2'); g2.disabled = false; g2.classList.add('pulse'); g2.querySelector('.tx').innerHTML = 'Get matched<small>Your quote comes with it</small>';
     const accept = () => {
       if (g2.dataset.done) return; g2.dataset.done = '1';
-      g2.classList.remove('pulse'); g2.querySelector('.tx').textContent = 'Quote accepted ✓'; track('accept-quote');
+      g2.classList.remove('pulse'); g2.querySelector('.tx').textContent = 'Matching you…'; track('get-matched');
       later(s2, 700);
     };
     g2.addEventListener('click', accept);
