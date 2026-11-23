@@ -301,6 +301,11 @@ em.g{font-style:normal;background:linear-gradient(var(--green),var(--green)) no-
 .incl li.in::before{background:var(--ok);animation:pop .4s var(--spring)}
 .incl li.next::before{content:"\2192"}
 .incl li.next.in::before{background:var(--dark)}
+.est{display:flex;flex-direction:column;gap:3px;padding:9px 12px;border-radius:12px;background:rgba(20,20,21,.05);opacity:0;transform:translateY(6px);transition:opacity .5s var(--ease),transform .5s var(--ease)}
+.est.in{opacity:1;transform:none}
+.esth{display:flex;align-items:baseline;justify-content:space-between;gap:10px}
+.estk{font-size:12px;font-weight:600;color:var(--soft)}
+.estr{font-size:19px;font-weight:700;letter-spacing:-.02em;color:var(--ink);font-variant-numeric:tabular-nums;white-space:nowrap}
 /* what to keep: the designer's good decisions, as compact chips */
 .pane.kp{display:grid;grid-template-columns:1fr 1fr;gap:5px}
 .pane.kp[hidden]{display:none}
@@ -501,7 +506,7 @@ em.g{font-style:normal;background:linear-gradient(var(--green),var(--green)) no-
   .feas .gauge .big{font-size:9.5px}
   .refin{width:56px} }
 .ph,.dsk{display:none}
-@media (min-width:900px) and (min-height:560px){ .sheet.qcard{gap:16px;padding:28px} .qcard h3{font-size:32px} .qk{font-size:12.5px} .qst{font-size:13px;padding:6px 12px} .incl{gap:18px} .incl li{gap:12px} .incl li span{font-size:14.5px} .incl li span b{font-size:18px} .incl li::before{width:26px;height:26px;font-size:13px} .qnote{font-size:13px}
+@media (min-width:900px) and (min-height:560px){ .sheet.qcard{gap:16px;padding:28px} .qcard h3{font-size:32px} .qk{font-size:12.5px} .qst{font-size:13px;padding:6px 12px} .incl{gap:18px} .incl li{gap:12px} .incl li span{font-size:14.5px} .incl li span b{font-size:18px} .incl li::before{width:26px;height:26px;font-size:13px} .qnote{font-size:13px} .est{padding:16px 18px;gap:6px;margin-top:6px} .estk{font-size:14px} .estr{font-size:30px}
   .scores{max-width:460px;margin:0 auto;gap:12px} .sc2{padding:10px 18px 10px 10px;gap:16px;border-radius:22px} .sc2 .gauge{width:60px;height:60px} .sc2 .gauge .big{font-size:14px} .sc2 b{font-size:18px} .sc2 small{font-size:13px} }
 @media (max-height:640px){ .scores{padding-top:46px;gap:5px} .sc2{padding:4px 12px 4px 4px;border-radius:14px} .sc2 .gauge{width:34px;height:34px} .sc2 .gauge .big{font-size:9.5px} .sc2 b{font-size:12.5px} .sc2 small{display:none} }
 @media (max-width:899px){ .reading .sheet{display:none} .split .sheet{animation:rise .5s var(--ease) both} }
@@ -613,6 +618,9 @@ em.g{font-style:normal;background:linear-gradient(var(--green),var(--green)) no-
   #intent{font-size:12.5px;min-height:0}
   .brief{padding:8px 10px;gap:4px}
   .mcards{height:30vh}
+  .incl{gap:5px}
+  .est{padding:6px 11px;gap:1px}
+  .estr{font-size:17px}
 }
 @media (prefers-reduced-motion:reduce){
   *,*::before,*::after{animation-duration:.01s!important;animation-delay:0s!important;animation-iteration-count:1!important;transition-duration:.01s!important}
@@ -691,6 +699,10 @@ em.g{font-style:normal;background:linear-gradient(var(--green),var(--green)) no-
         <li><span><b>Fabric options, researched for you.</b></span></li>
         <li class="next"><span><b>Next: meet your manufacturer, and make it real.</b></span></li>
       </ul>
+      <div class="est" id="est">
+        <div class="esth"><span class="estk">Sample estimate</span><span class="estr"><span id="estlo">€0</span> – <span id="esthi">€0</span></span></div>
+        <p class="qnote">Indicative, across your fabric options. Your manufacturer confirms the final quote.</p>
+      </div>
     </div>
     <div class="acts">
       <button class="cta" id="go2" type="button" disabled><span class="n">2</span><span class="tx">Reading your design…</span></button>
@@ -1011,10 +1023,12 @@ em.g{font-style:normal;background:linear-gradient(var(--green),var(--green)) no-
     // the quote turns ready, then what it unlocks ticks in, one by one
     later(() => { const q = $('qst'); q.textContent = '✓ Ready'; q.classList.add('ok'); }, 500);
     $('incl').querySelectorAll('li').forEach((li, i) => later(() => li.classList.add('in'), 750 + i * 260));
+    // an honest range, not a price: it depends on the fabric they pick, and the manufacturer confirms it
+    later(() => { $('est').classList.add('in'); countTo($('estlo'), 290, '€', '', 900); countTo($('esthi'), 420, '€', '', 900); }, 1700);
 
     // Two ways forward. Accepting the quote leads straight to the manufacturer match;
     // the free 3D preview + feasibility report means a designer who stops here still leaves with something useful.
-    const g2 = $('go2'); g2.disabled = false; g2.classList.add('pulse'); g2.querySelector('.tx').innerHTML = 'Get matched<small>Your quote comes with it</small>';
+    const g2 = $('go2'); g2.disabled = false; g2.classList.add('pulse'); g2.querySelector('.tx').innerHTML = 'Get matched<small>Your final quote comes with it</small>';
     const accept = () => {
       if (g2.dataset.done) return; g2.dataset.done = '1';
       g2.classList.remove('pulse'); g2.querySelector('.tx').textContent = 'Matching you…'; track('get-matched');
