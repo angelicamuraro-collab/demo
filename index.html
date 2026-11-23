@@ -305,6 +305,7 @@ em.g{font-style:normal;background:linear-gradient(var(--green),var(--green)) no-
 .est.in{opacity:1;transform:none}
 .esth{display:flex;align-items:baseline;justify-content:space-between;gap:10px}
 .estk{font-size:12px;font-weight:600;color:var(--soft)}
+.est .qnote{color:#a6a6ac}
 .estr{font-size:19px;font-weight:700;letter-spacing:-.02em;color:var(--ink);font-variant-numeric:tabular-nums;white-space:nowrap}
 /* what to keep: the designer's good decisions, as compact chips */
 .pane.kp{display:grid;grid-template-columns:1fr 1fr;gap:5px}
@@ -715,7 +716,7 @@ em.g{font-style:normal;background:linear-gradient(var(--green),var(--green)) no-
       </ul>
       <div class="est" id="est">
         <div class="esth"><span class="estk">Sample estimate</span><span class="estr"><span id="estlo">€0</span> – <span id="esthi">€0</span></span></div>
-        <p class="qnote">Indicative, across your fabric options. Your manufacturer confirms the final quote.</p>
+        <p class="qnote">Indicative, across your fabric options. You will review it together with your manufacturer.</p>
       </div>
     </div>
     <div class="acts">
@@ -808,7 +809,7 @@ em.g{font-style:normal;background:linear-gradient(var(--green),var(--green)) no-
     <div class="endbar" id="endbar" hidden>
       <h2 class="dsk">Made in Italy. <em class="g">At your door.</em></h2>
       <div class="thumbs" id="thumbs"><button class="replay" id="replay" type="button">Replay</button></div>
-      <a class="cta pulse" id="final" href="https://www.studioforma.fashion/#contact" target="_blank" rel="noopener"><span class="n">→</span><span class="tx">Start your project</span></a>
+      <a class="cta pulse" id="final" href="https://www.studioforma.fashion/#contact" target="_blank" rel="noopener"><span class="n">→</span><span class="tx">Start your free trial</span></a>
     </div>
   </section>
 </template>
@@ -1048,7 +1049,7 @@ em.g{font-style:normal;background:linear-gradient(var(--green),var(--green)) no-
 
     // Two ways forward. Accepting the quote leads straight to the manufacturer match;
     // the free 3D preview + feasibility report means a designer who stops here still leaves with something useful.
-    const g2 = $('go2'); g2.disabled = false; g2.classList.add('pulse'); g2.querySelector('.tx').innerHTML = 'Get matched<small>Your final quote comes with it</small>';
+    const g2 = $('go2'); g2.disabled = false; g2.classList.add('pulse'); g2.querySelector('.tx').innerHTML = 'Accept quote<small>Next, meet your manufacturer</small>';
     const accept = () => {
       if (g2.dataset.done) return; g2.dataset.done = '1';
       g2.classList.remove('pulse'); g2.querySelector('.tx').textContent = 'Matching you…'; track('get-matched');
