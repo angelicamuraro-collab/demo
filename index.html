@@ -506,6 +506,7 @@ em.g{font-style:normal;background:linear-gradient(var(--green),var(--green)) no-
 .cap b{display:block;font-size:14px;color:var(--ink);font-weight:600}
 .endbar{flex:none;display:flex;flex-direction:column;gap:10px}
 .thumbs{display:flex;gap:6px;align-items:center}
+.dnote{margin:-2px 0 0;text-align:center;font-size:12.5px;line-height:1.35;color:var(--soft)}
 .thumbs button.th{width:46px;height:46px;border:0;padding:0;border-radius:12px;overflow:hidden;background:var(--card-2);opacity:0;animation:pop .45s var(--spring) forwards;flex:none}
 .thumbs button.th img{width:100%;height:100%;object-fit:cover}
 .thumbs button.th.on{outline:2.5px solid var(--ink);outline-offset:-2.5px}
@@ -602,6 +603,7 @@ em.g{font-style:normal;background:linear-gradient(var(--green),var(--green)) no-
   .thumbs{flex-wrap:wrap;gap:8px}
   .thumbs button.th{width:68px;height:68px;border-radius:14px}
   .thumbs .replay{margin-left:0}
+  .dnote{display:none}
   .track div{font-size:12px}
   .cap{font-size:14px;left:14px;right:14px;bottom:14px}
   .cap b{font-size:16px}
@@ -815,6 +817,7 @@ em.g{font-style:normal;background:linear-gradient(var(--green),var(--green)) no-
       <h2 class="dsk">Made in Italy. <em class="g">At your door.</em></h2>
       <div class="thumbs" id="thumbs"><button class="replay" id="replay" type="button">Replay</button></div>
       <a class="cta pulse" id="final" href="https://app.studioforma.fashion/" target="_blank" rel="noopener"><span class="n">→</span><span class="tx">Start your free trial</span></a>
+      <p class="dnote">Works best on desktop.<br>We've also sent the link to your email.</p>
     </div>
   </section>
 </template>
