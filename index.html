@@ -103,6 +103,11 @@ em.g{font-style:normal;background:linear-gradient(var(--green),var(--green)) no-
 .gate h1{margin:0;font-size:38px;line-height:1.05;letter-spacing:-.03em;text-wrap:balance}
 .gate p{margin:0;font-size:16px;color:var(--soft)}
 .gate .gbtn{margin-top:10px;min-height:54px;display:flex;align-items:center;justify-content:center;border-radius:999px;background:var(--dark);color:#fff;font-weight:600;font-size:15.5px;text-decoration:none}
+.consent{position:fixed;z-index:60;left:max(12px,env(safe-area-inset-left,0px));right:max(12px,env(safe-area-inset-right,0px));bottom:calc(12px + env(safe-area-inset-bottom,0px));max-width:420px;margin:0 auto;display:flex;align-items:center;gap:6px;padding:7px 7px 7px 16px;border-radius:999px;background:rgba(20,20,21,.92);color:#fff;backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);box-shadow:0 12px 30px -12px rgba(0,0,0,.5)}
+.consent[hidden]{display:none}
+.consent p{margin:0;flex:1;font-size:13px;line-height:1.3}
+.consent button{flex:none;border:0;border-radius:999px;padding:9px 13px;font:inherit;font-size:13px;font-weight:600;background:transparent;color:#c9c9cf;cursor:pointer}
+.consent .yes{background:#fff;color:#141415}
 @media (min-width:900px){.gate h1{font-size:56px}.gate .gbtn{align-self:flex-start;padding:0 34px}}
 /* 0 · intro + upload */
 .splash{position:absolute;inset:0;z-index:20;display:flex;flex-direction:column;justify-content:center;gap:16px;padding:0 6px 40px;cursor:pointer}
@@ -842,6 +847,7 @@ em.g{font-style:normal;background:linear-gradient(var(--green),var(--green)) no-
     ok = true;
     try {
       localStorage.setItem('sf_access', '1');
+      localStorage.setItem('sf_lead_pending', '1');
       q.delete('access');
       history.replaceState(null, '', location.pathname + (q.toString() ? '?' + q : '') + location.hash);
     } catch (e) {}
@@ -850,6 +856,35 @@ em.g{font-style:normal;background:linear-gradient(var(--green),var(--green)) no-
   window.SF_LOCKED = true;
   document.querySelector('.app').hidden = true;
   document.getElementById('gate').hidden = false;
+})();
+</script>
+<!-- Meta Pixel, public build only, after cookie consent. Lead = first unlock from the Squarespace form,
+     DemoStep = progress, StartTrial = click on "Start your free trial". -->
+<div class="consent" id="consent" hidden role="dialog" aria-label="Cookies">
+  <p>We use cookies to measure our ads.</p>
+  <button type="button" id="cno">Decline</button>
+  <button type="button" id="cyes" class="yes">Accept</button>
+</div>
+<script>
+(() => {
+  window.sfTrack = () => {};
+  if (document.documentElement.dataset.gate !== 'on' || window.SF_LOCKED) return;
+  const PIXEL = '2940762299614649';
+  const get = k => { try { return localStorage.getItem(k); } catch (e) { return null; } };
+  const set = (k, v) => { try { v === null ? localStorage.removeItem(k) : localStorage.setItem(k, v); } catch (e) {} };
+  const start = () => {
+    !function(f,b,e,v,n,t,s){if(f.fbq)return;n=f.fbq=function(){n.callMethod?n.callMethod.apply(n,arguments):n.queue.push(arguments)};if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';n.queue=[];t=b.createElement(e);t.async=!0;t.src=v;s=b.getElementsByTagName(e)[0];s.parentNode.insertBefore(t,s)}(window,document,'script','https://connect.facebook.net/en_US/fbevents.js');
+    fbq('init', PIXEL); fbq('track', 'PageView');
+    if (get('sf_lead_pending') === '1') { fbq('track', 'Lead', { content_name: 'Studioforma demo' }); set('sf_lead_pending', null); }
+    window.sfTrack = (step) => { try { step === 'cta' ? fbq('track', 'StartTrial') : fbq('trackCustom', 'DemoStep', { step }); } catch (e) {} };
+  };
+  const c = get('sf_consent');
+  if (c === 'yes') return start();
+  if (c === 'no') return;
+  const box = document.getElementById('consent'); box.hidden = false;
+  const done = yes => { set('sf_consent', yes ? 'yes' : 'no'); box.hidden = true; if (yes) start(); };
+  document.getElementById('cyes').onclick = e => { e.stopPropagation(); done(true); };
+  document.getElementById('cno').onclick = e => { e.stopPropagation(); done(false); };
 })();
 </script>
 <script>
@@ -885,7 +920,7 @@ em.g{font-style:normal;background:linear-gradient(var(--green),var(--green)) no-
   }
 
   /* ---------- tracking hook for the host page (no personal data) ---------- */
-  const track = step => { try { if (window.parent !== window) window.parent.postMessage({ type: 'sf-demo-step', step }, '*'); } catch (e) {} };
+  const track = step => { try { window.sfTrack(step); if (window.parent !== window) window.parent.postMessage({ type: 'sf-demo-step', step }, '*'); } catch (e) {} };
 
   /* ---------- progress ---------- */
   // the three milestones of the service, always visible at the top
